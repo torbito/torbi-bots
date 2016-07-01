@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html ng-app="johnnyApp">
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="/stylesheets/materialdesignicons.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <script src="/angular/angular.js"></script>
+    <script src="/angular-aria/angular-aria.js"></script>
+    <script src="/angular-animate/angular-animate.js"></script>
+    <script src="/angular-material/angular-material.js"></script>
+
+    <script src="/javascripts/app.js"></script>
+
+  </head>
+
+
+  <body ng-controller="johnnyCtrl" ng-cloak>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button">
+          <md-icon md-svg-icon="arrow-left-bold"></md-icon>
+        </md-button>
+        <h2>
+          <span></span>
+        </h2>
+        <span flex></span>
+
+
+        <md-button class="md-fab md-mini">
+          <md-icon md-svg-icon="led-on"></md-icon>
+        </md-button>
+        <md-button class="md-fab md-mini">
+          <md-icon md-svg-icon="steam"></md-icon>
+        </md-button>
+
+      </div>
+    </md-toolbar>
+
+
+
+
+
+    <md-input-container>
+      <label>Leds</label>
+      <input type="number" ng-change="addRemoveLeds(ledsCount)" ng-model="ledsCount" aria-label="red" aria-controls="red-slider" min="0">
+      <md-switch ng-model="animation"></md-switch>
+
+    </md-input-container>
+
+    <md-grid-list
+            md-cols-xs="1"
+            md-cols-sm="3"
+            md-cols-gt-xs="2"
+            md-cols-md="4"
+            md-cols-gt-md="5"
+            md-row-height="{{animation ? '1:1' : '2:1'}}"
+            md-gutter="12px" md-gutter-gt-sm="8px" >
+
+
+      <md-grid-tile ng-repeat="led in items" class="green"  md-rowspan="{{animation ? 2 : 1}}" md-colspan="1" md-colspan-sm="1" md-colspan-xs="1">
+        <md-grid-tile-header>
+           <div style="padding-left: 20px">
+             <md-slider-container ng-if="led.type == 'LED'">
+                <md-switch ng-model="led.status" ng-change="led.status ? setLed(led.pin, 'brightness', led.brightness) : setLed(led.pin, 'off')"></md-switch>
+                <md-slider flex min="0" max="255" ng-model="led.brightness" ng-disabled="!led.status" ng-change="setLed(led.pin, 'brightness', led.brightness)"></md-slider>
+              </md-slider-container>
+               <md-slider-container ng-if="led.type == 'SERVO'">
+                   <md-slider flex min="0" max="180" ng-model="led.brightness" ng-disabled="!led.status" ng-change="setLed(led.pin, 'brightness', led.brightness)"></md-slider>
+               </md-slider-container>
+           </div>
+        </md-grid-tile-header>
+
+        <div layout="column" ng-if="animation">
+          <div flex class="animation-list-input">
+            <md-input-container>
+              <label>Duration</label>
+              <input type="number" ng-model="led.animation.duration" aria-label="red" aria-controls="red-slider">
+            </md-input-container>
+          </div>
+          <div flex>
+            <div layout="row" ng-repeat="cuePoint in led.animation.cuePoints" class="animation-list-input">
+              <div flex>
+                <md-input-container>
+                  <label ng-if="$first">Cue</label>
+                  <input type="number" ng-model="cuePoint" ng-disabled="$first || $last">
+                </md-input-container>
+              </div>
+              <div flex>
+                <md-input-container>
+                  <label ng-if="$first">Breakpoint</label>
+                    <input type="number" ng-model="led.animation.keyFrames[$index]" ng-if="led.type == 'LED'" max="255">
+                    <input type="number" ng-model="led.animation.keyFrames[$index].value" ng-if="led.type == 'SERVO' && (!$first && !$last)" max="180">
+                    <input type="number" ng-model="led.animation.keyFrames[$index]" ng-if="led.type == 'SERVO' && ($first || $last)" max="180">
+
+                </md-input-container>
+              </div>
+            </div>
+            <md-button flex class="md-raised" ng-click="sendAnimation(led)">Animate</md-button>
+
+          </div>
+
+        </div>
+
+        <md-grid-tile-footer>
+          <md-input-container>
+              <md-icon md-svg-icon="led-on" ng-click="convertToServo(led)" ng-if="led.type == 'LED'"></md-icon>
+              <md-icon md-svg-icon="steam" ng-click="convertToLed(led)" ng-if="led.type == 'SERVO'"></md-icon>
+              <input type="number" ng-model="led.pin" >
+          </md-input-container>
+        </md-grid-tile-footer>
+      </md-grid-tile>
+
+
+    </md-grid-list>
+
+
+
+
+
+
+
+
+  </body>
+</html>
