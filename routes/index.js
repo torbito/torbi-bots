@@ -121,12 +121,13 @@ router.post('/led-animation', function(req, res, next){
 router.post('/servo-animation', function(req, res, next){
   console.log(req.body);
   console.log(req.body.animation);
-
+/*
   if(servo == undefined){
     servo = new five.Servo(req.body.pin);
   }
-
-  var animation = new five.Animation(servo);
+*/
+  var servo1 = new five.Servo(req.body.pin);
+  var animation = new five.Animation(servo1);
 
   animation.enqueue(req.body.animation);
 
