@@ -9,7 +9,6 @@ johnnyApp.controller('johnnyCtrl', function PhoneListController($scope, $http) {
 
     $scope.leds = [];
     $scope.items = [];
-
     $scope.animation = true;
 
     $scope.addRemoveLeds = function(quantity){
@@ -22,8 +21,7 @@ johnnyApp.controller('johnnyCtrl', function PhoneListController($scope, $http) {
             $scope.addRemoveLeds(quantity);
         }
     }
-
-
+    
     function createLed(){
         return {
             pin: 0,
@@ -101,6 +99,12 @@ johnnyApp.controller('johnnyCtrl', function PhoneListController($scope, $http) {
 
     $scope.setLed = function(pin, doIt, value){
         $http.get('/led?pin='+pin+'&do='+doIt+'&value='+value);
+    }
+
+    $scope.animateAll = function(){
+        $scope.items.forEach(function(item){
+            $scope.sendAnimation(item);
+        });
     }
 
 

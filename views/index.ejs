@@ -64,9 +64,10 @@
              <md-slider-container ng-if="led.type == 'LED'">
                 <md-switch ng-model="led.status" ng-change="led.status ? setLed(led.pin, 'brightness', led.brightness) : setLed(led.pin, 'off')"></md-switch>
                 <md-slider flex min="0" max="255" ng-model="led.brightness" ng-disabled="!led.status" ng-change="setLed(led.pin, 'brightness', led.brightness)"></md-slider>
+
               </md-slider-container>
                <md-slider-container ng-if="led.type == 'SERVO'">
-                   <md-slider flex min="0" max="180" ng-model="led.brightness" ng-disabled="!led.status" ng-change="setLed(led.pin, 'brightness', led.brightness)"></md-slider>
+                   <md-slider flex min="0" max="180" ng-model="led.degrees" ng-change="setLed(led.pin, 'brightness', led.degrees)"></md-slider>
                </md-slider-container>
            </div>
         </md-grid-tile-header>
@@ -116,7 +117,7 @@
 
 
 
-
+    <md-button flex class="md-raised" ng-click="animateAll()">Animate All</md-button>
 
 
 

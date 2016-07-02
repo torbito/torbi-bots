@@ -46,7 +46,7 @@ var connectBoard = function(){
 }
 
 
-connectBoard();
+//connectBoard();
 
 
 /* GET home page. */
