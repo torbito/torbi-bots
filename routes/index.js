@@ -11,30 +11,33 @@ var connectBoard = function(){
     board.on("ready", function() {
 
       var led = new five.Led(5);
+      led.on();
+      /*
+            var led = new five.Led(5);
 
-      led.fade({
-        easing: "linear",
-        duration: 1000,
-        cuePoints: [0, 0.2, 0.4, 0.6, 0.8, 1],
-        keyFrames: [0, 250, 25, 150, 100, 125],
-        onstop: function() {
-          console.log("Animation stopped");
-        }
-      });
+            led.fade({
+              easing: "linear",
+              duration: 1000,
+              cuePoints: [0, 0.2, 0.4, 0.6, 0.8, 1],
+              keyFrames: [0, 250, 25, 150, 100, 125],
+              onstop: function() {
+                console.log("Animation stopped");
+              }
+            });
 
-      var led2 = new five.Led(6);
+            var led2 = new five.Led(6);
 
-      led2.fade({
-        easing: "linear",
-        duration: 1500,
-        cuePoints: [0, 0.2, 0.4, 0.6, 0.8, 1],
-        keyFrames: [0, 250, 25, 150, 100, 125],
-        onstop: function() {
-          console.log("Animation stopped");
-        }
-      });
+            led2.fade({
+              easing: "linear",
+              duration: 1500,
+              cuePoints: [0, 0.2, 0.4, 0.6, 0.8, 1],
+              keyFrames: [0, 250, 25, 150, 100, 125],
+              onstop: function() {
+                console.log("Animation stopped");
+              }
+            });
 
-
+      */
 
     });
 
@@ -46,7 +49,7 @@ var connectBoard = function(){
 }
 
 
-//connectBoard();
+connectBoard();
 
 
 /* GET home page. */
@@ -54,10 +57,12 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/led', function(req, res){
-  var led = new five.Led(req.param("pin"));
+router.get('/led', function(req, res, next){
+  console.log(req.query.pin);
 
-  switch (req.param('do')){
+  let led = new five.Led(req.query.pin);
+
+  switch (req.query.do){
     case 'on':
         led.on();
       break;
@@ -68,7 +73,7 @@ router.get('/led', function(req, res){
         led.stop();
       break;
     case 'brightness':
-      led.brightness(req.param("value"));
+      led.brightness(req.query.value);
       break;
   }
   res.end();
@@ -126,8 +131,10 @@ router.post('/servo-animation', function(req, res, next){
     servo = new five.Servo(req.body.pin);
   }
 */
-  var servo1 = new five.Servo(req.body.pin);
+  var servo1 = new five.Servo({pin:req.body.pin, startAt:90, range: [ 80, 110 ]});
   var animation = new five.Animation(servo1);
+
+  req.body.animation.loop = true;
 
   animation.enqueue(req.body.animation);
 
@@ -137,16 +144,19 @@ router.post('/servo-animation', function(req, res, next){
 
 
 router.get('/servo-animation', function(req, res, next){
+  console.log(req.query);
+
   if(servo == undefined){
-    servo = new five.Servo(req.param('pin'));
+    servo = new five.Servo(req.query.pin);
   }
 
   var animation = new five.Animation(servo);
 
   animation.enqueue({
-    cuePoints: [0, 0.25, 0.75, 1],
-    keyFrames: [90, { value: 180, easing: "inQuad" }, { value: 0, easing: "outQuad" }, 90],
-    duration: 2000
+    cuePoints: [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1],
+    keyFrames: [90,90,85,85,80,80,90,90,100,100],
+    duration: 10000
+
   });
 
 

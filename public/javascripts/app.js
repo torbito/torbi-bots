@@ -70,7 +70,7 @@ johnnyApp.controller('johnnyCtrl', function PhoneListController($scope, $http) {
         return {
             cuePoints: [0, 0.2, 0.4, 0.6, 0.8, 1],
             keyFrames: [0, {value: 90}, {value: 60},{value: 90}, {value: 60}, 180],
-            duration: 3000
+            duration: 3000,
         }
     }
 
